@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home - EBMS{% endblock %}
+{% block page_title %}Welcome to EBMS{% endblock %}
+{% block nav_options %}
+    <a href="{% url 'register' %}" class="btn btn-outline-light">📝 Register</a>
+    <a href="{% url 'login' %}" class="btn btn-outline-light">🔐 Login</a>
+{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">Electricity Bill Management System</h1>
+    <a href="{% url 'register' %}" class="btn btn-primary me-3">Register</a>
+    <a href="{% url 'login' %}" class="btn btn-success">Login</a>
+
+    <img src="{% static 'images/home_image.jpg' %}" alt="Home Image"
+         class="img-fluid mt-4"
+         style="max-width: 800px; height: auto; display: block; margin: 0 auto;">
+</div>
+{% endblock %}

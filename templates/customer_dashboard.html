@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Customer Dashboard - EBMS{% endblock %}
+{% block page_title %}Your Dashboard{% endblock %}
+{% block nav_options %}
+    <a href="{% url 'logout' %}" class="btn btn-outline-light">🚪 Logout</a>
+{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4">{{user}} Dashboard</h2>
+
+    {% for table, rows in data.items %}
+        <h4 class="mt-4 text-capitalize">{{ table|title }}</h4>
+
+        {% if rows %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    {% if table == 'customers' %}
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Account Number</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <form method="POST" action="{% url 'update_profile' %}">
+                            {% csrf_token %}
+                            <tr>
+                                <td><input type="text" name="id" value="{{ rows.0.0 }}" readonly class="form-control form-control-sm"></td>
+                                <td><input type="text" name="username" value="{{ rows.0.1 }}" readonly class="form-control form-control-sm"></td>
+                                <td><input type="text" name="account_number" value="{{ rows.0.2 }}" readonly class="form-control form-control-sm"></td>
+                                <td><input type="text" name="name" value="{{ rows.0.3 }}" class="form-control form-control-sm"></td>
+                                <td><input type="text" name="address" value="{{ rows.0.4 }}" class="form-control form-control-sm"></td>
+                                <td><button class="btn btn-sm btn-success">Save</button></td>
+                            </tr>
+                        </form>
+                    </tbody>
+
+                    {% elif table == 'bills' %}
+                    <tr>
+                        <th>Bill ID</th>
+                        <th>Username</th>
+                        <th>Account Number</th>
+                        <th>Month</th>
+                        <th>Total Amount Due</th>
+                        <th>Payment Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr>
+                            {% for item in row %}
+                            <td>{{ item }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    {% elif table == 'billing_rates' %}
+                    <tr>
+                        <th>Rate Tier</th>
+                        <th>Usage Range</th>
+                        <th>Cost per Unit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr>
+                            {% for item in row %}
+                            <td>{{ item }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    {% elif table == 'electricity_usage' %}
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Account Number</th>
+                        <th>Month</th>
+                        <th>Meter Reading</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr>
+                            {% for item in row %}
+                            <td>{{ item }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    {% elif table == 'payments' %}
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Bill ID</th>
+                        <th>Payment Date</th>
+                        <th>Amount Paid</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr>
+                            {% for item in row %}
+                            <td>{{ item }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    {% endif %}
+            </table>
+        </div>
+        {% else %}
+            <p class="text-muted">No data available in {{ table }}</p>
+        {% endif %}
+    {% endfor %}
+
+    <div class="mt-4 d-flex gap-3">
+        <a href="{% url 'bill_generation' %}" class="btn btn-primary">📄 View / Generate Bill</a>
+
+        <form method="POST" action="{% url 'request_delete' %}">
+            {% csrf_token %}
+            <button class="btn btn-danger">🗑️ Request Account Deletion</button>
+        </form>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'logout' %}" class="btn btn-secondary">🚪 Logout</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Register - EBMS{% endblock %}
+{% block page_title %}Register{% endblock %}
+{% block nav_options %}
+    <a href="{% url 'login' %}" class="btn btn-outline-light">🔐 Login</a>
+    <a href="{% url 'home' %}" class="btn btn-outline-light">🏠 Home</a>
+{% endblock %}
+
+{% block content %}
+    <h2>Register</h2>
+    <form method="POST">
+    {% csrf_token %}
+        {% if message %}
+        <div class="alert alert-info">{{ message }}</div>
+        {% endif %}
+        <div class="mb-3">
+            <label>Username:</label>
+            <input type="text" name="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Password:</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Email:</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Full Name:</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Account Number:</label>
+            <input type="text" name="account_number" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Address:</label>
+            <input type="text" name="address" class="form-control" required>
+        </div>
+        <button class="btn btn-primary">Register</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Logging Out - EBMS{% endblock %}
+{% block page_title %}Logging Out{% endblock %}
+{% block nav_options %}{% endblock %}
+
+{% block content %}
+<h2>Logging out...</h2>
+<p>Please wait while we redirect you to the homepage.</p>
+<script>
+    window.onload = function () {
+        alert("Thank you for using EBMS. You have been logged out.");
+        setTimeout(function () {
+            window.location.href = "{% url 'home' %}";
+        }, 500);
+    };
+</script>
+{% endblock %}

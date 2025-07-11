@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - EBMS{% endblock %}
+{% block page_title %}Admin Dashboard{% endblock %}
+{% block nav_options %}
+    <a href="{% url 'logout' %}" class="btn btn-outline-light">🚪 Logout</a>
+{% endblock %}
+
+{% block content %}
+    <!-- Navbar -->
+    <nav class="navbar navbar-light bg-light mb-4">
+        <div class="container-fluid d-flex justify-content-between">
+            <span class="navbar-brand h1">Admin Dashboard</span>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    🔔 Notifications
+                </button>
+                <ul class="dropdown-menu p-2" style="width: 400px;">
+                    {% for req in requests %}
+                    <li class="dropdown-item">
+                        <div class="mb-2">
+                            {% if req.7 == 'register' %}
+                                <strong>Registration Request:</strong> {{ req.1 }}<br>
+                                <small><em>{{ req.10 }}</em></small>
+                                <div class="mt-1 d-flex gap-2">
+                                    <form action="{% url 'approve_registration' req.0 %}" method="post">
+                                        {% csrf_token %}
+                                        <button class="btn btn-sm btn-success">Approve</button>
+                                    </form>
+                                    <form action="{% url 'reject_request' req.0 %}" method="post" class="d-flex gap-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="type" value="register">
+                                        <input type="text" name="reason" placeholder="Reason" required class="form-control form-control-sm" style="width: 150px;">
+                                        <button class="btn btn-sm btn-danger">Reject</button>
+                                    </form>
+                                </div>
+                            {% elif req.7 == 'delete' %}
+                                <strong>Delete Request:</strong> {{ req.1 }}<br>
+                                <small><em>{{ req.10 }}</em></small>
+                                <div class="mt-1 d-flex gap-2">
+                                    <form action="{% url 'approve_delete' req.1 %}" method="post">
+                                        {% csrf_token %}
+                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                    <form action="{% url 'reject_request' req.0 %}" method="post" class="d-flex gap-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="type" value="delete">
+                                        <input type="text" name="reason" placeholder="Reason" required class="form-control form-control-sm" style="width: 150px;">
+                                        <button class="btn btn-sm btn-warning">Reject</button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </li>
+                    
+                    {% empty %}
+                    <li class="dropdown-item text-muted">No pending requests</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Alerts -->
+    {% if message %}
+    <div class="alert alert-info">{{ message }}</div>
+    {% endif %}
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <h3>Database Tables</h3>
+
+    <form method="POST" action="{% url 'update_tables' %}">
+        {% csrf_token %}
+        {% for table, content in data.items %}
+            <h5 class="mt-4 text-capitalize">{{ table }}</h5>
+            {% if content.rows %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            {% for col in content.columns %}
+                            <th>{{ col|capfirst }}</th>
+                            {% endfor %}
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in content.rows %}
+                        <tr>
+                            {% for item in row %}
+                            <td>
+                                <input type="text" name="{{ table }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"
+                                       value="{{ item }}" class="form-control form-control-sm" readonly>
+                            </td>
+                            {% endfor %}
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-primary edit-btn">✏️ Edit</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <p class="text-muted">No data available in <strong>{{ table }}</strong></p>
+            {% endif %}
+        {% endfor %}
+
+        <div class="d-flex justify-content-end gap-3 mt-4">
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Reset</a>
+            <button type="submit" class="btn btn-success">Submit Changes</button>
+        </div>
+    </form>
+
+    <div class="mt-5 text-end">
+        <a href="{% url 'logout' %}" class="btn btn-outline-dark">Logout</a>
+    </div>
+
+    
+    {% endblock %}
+
+    {% block scripts %}
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Make input fields editable on edit button click
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const row = button.closest('tr');
+                row.querySelectorAll('input').forEach(input => {
+                    input.readOnly = false;
+                    input.classList.add('bg-light');
+                });
+            });
+        });
+    </script>
+    {% endblock %}

@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Electricity Bill</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #eee;
+            padding: 30px;
+        }
+        .top-buttons {
+            max-width: 800px;
+            margin: auto;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #6c757d;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.95em;
+            margin-right: 5px;
+        }
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 40px;
+            border: 1px solid #ddd;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+            color: #333;
+        }
+        .invoice-box h1 {
+            font-size: 32px;
+            line-height: 32px;
+            color: #333;
+            text-align: right;
+            margin: 0;
+        }
+        .company-details {
+            text-align: right;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .details {
+            margin-bottom: 30px;
+        }
+        .details table {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+        }
+        .details td {
+            padding: 5px;
+            vertical-align: top;
+        }
+        .details td.title {
+            font-weight: bold;
+            width: 150px;
+            color: #555;
+        }
+        .item-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .item-table th {
+            border-bottom: 2px solid #ddd;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+        .item-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .status {
+            font-weight: bold;
+        }
+        .status.paid {
+            color: green;
+        }
+        .status.unpaid {
+            color: red;
+        }
+        .total {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .print-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .print-btn:hover {
+            background: #0056b3;
+        }
+        .thank-you {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 20px;
+            font-style: italic;
+            color: #555;
+        }
+        /* Hide everything except .invoice-box during print */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .invoice-box, .invoice-box * {
+                visibility: visible;
+            }
+            .invoice-box {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+                border: none;
+            }
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="top-buttons">
+    <a href="{% url 'customer_dashboard' %}" class="back-btn">← Back to Dashboard</a>
+</div>
+
+<div class="invoice-box">
+    <table width="100%">
+        <tr>
+            <td>
+                <h2>Electricity Bill</h2>
+                <div style="font-size:14px;color:#777;">123 Power Street<br>Navi Mumbai, MH, 410206<br>support@provider.com</div>
+            </td>
+            <td style="text-align:right;">
+                <h1>INVOICE</h1>
+                <div>Invoice Date: {{ bill_month|date:"F Y" }}</div>
+            </td>
+        </tr>
+    </table>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% else %}
+
+    <div class="details">
+        <table>
+            <tr>
+                <td class="title">Account Number:</td>
+                <td>{{ account_number }}</td>
+                <td class="title">Customer Name:</td>
+                <td>{{ name }}</td>
+            </tr>
+            <tr>
+                <td class="title">Address:</td>
+                <td>{{ address }}</td>
+                <td class="title">Email:</td>
+                <td>{{ email }}</td>
+            </tr>
+            <tr>
+                <td class="title">Meter Reading:</td>
+                <td>{{ meter_reading }} units</td>
+                <td class="title">Status:</td>
+                <td class="status {% if payment_status == 'Paid' %}paid{% else %}unpaid{% endif %}">
+                    {{ payment_status }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <table class="item-table">
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th>Month</th>
+            <th>Units</th>
+            <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Electricity Consumption</td>
+            <td>{{ bill_month|date:"F Y" }}</td>
+            <td>{{ meter_reading }}</td>
+            <td>₹{{ total_due }}</td>
+        </tr>
+        {% if payment_status == "Paid" %}
+        <tr>
+            <td>Payment Received</td>
+            <td>{{ payment_date }}</td>
+            <td>-</td>
+            <td>(₹{{ amount_paid }})</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    <div class="total">
+        Total Amount Due: ₹{{ total_due }}
+    </div>
+
+    <button class="print-btn" onclick="window.print()">Print Bill</button>
+
+    <div class="thank-you">
+        Thank you for your payment!
+    </div>
+
+    {% endif %}
+</div>
+</body>
+</html>

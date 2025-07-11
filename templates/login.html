@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Login - EBMS{% endblock %}
+{% block page_title %}Login{% endblock %}
+{% block nav_options %}
+    <a href="{% url 'register' %}" class="btn btn-outline-light">📝 Register</a>
+    <a href="{% url 'home' %}" class="btn btn-outline-light">🏠 Home</a>
+{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Login</h2>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label>Username:</label>
+        <input type="text" name="username" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Password:</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
+    <button class="btn btn-success">Login</button>
+</form>
+{% endblock %}

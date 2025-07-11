@@ -1,0 +1,81 @@
+/* Global Reset */
+body {
+    background: #f9fafc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* EBMS Themed Navbar */
+.bg-ebms {
+    background: #1f4e79 !important;
+}
+
+.navbar .btn {
+    transition: all 0.3s ease;
+}
+
+.navbar .btn:hover {
+    background-color: #ffffff;
+    color: #1f4e79;
+    border: 1px solid #1f4e79;
+}
+
+/* Buttons */
+.btn-primary, .btn-success, .btn-danger, .btn-secondary {
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0b3d91;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-secondary:hover {
+    background-color: #6c757d;
+}
+
+/* Forms */
+.form-control:focus {
+    border-color: #1f4e79;
+    box-shadow: 0 0 0 0.2rem rgba(31, 78, 121, 0.25);
+}
+
+/* Tables */
+.table-hover tbody tr:hover {
+    background-color: #eef6ff;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+    color: #1f4e79;
+}
+
+/* Cards / Boxes */
+.bill-box, .shadow {
+    border-radius: 10px;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 6px;
+}
+
+/* Print Button Styling */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* Custom Utilities */
+.hover-shadow:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: box-shadow 0.3s ease-in-out;
+}
